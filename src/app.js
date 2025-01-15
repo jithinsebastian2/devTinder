@@ -2,15 +2,28 @@ const express = require('express');
 
 const app = express();
 
-//This will only handle GET requests to /user route on this server
-app.get('/user/:userId/:name/:password', (req, res) => {
-    console.log("Query params", req.query);
-    console.log('Path params', req.params);
-    res.send({
-        firstName: 'Jithin',
-        lastName: 'Sebastian'
-    })
-});
+app.use(
+    '/user',
+    (req, res, next)=> {
+        console.log('handling the route user');
+        // res.send('first response');
+        next();
+    },
+    (req, res, next)=> {
+        console.log('handling the route user1');
+        // res.send('first response');
+        next();
+    },
+    (req, res, next)=> {
+        console.log('handling the route user2');
+        // res.send('first response');
+        next();
+    },
+    (req, res, next)=> {
+        console.log('handling the route user3');
+        res.send('last response');
+    }
+)
 
 app.listen(3000, () => {
     console.log('listening on port 3000');
