@@ -11,6 +11,22 @@ const validateSignUp = (req = {}) => {
     }
 }
 
+const validateEditProfileData = (req) => {
+    const allowedEditFields = ['firstName', 'lastName', 'emailId', 'photoUrl', 'gender', 'age', 'about', 'skills'];
+    const isEditAllowed = Object.keys(req.body || {}).every((field)=> allowedEditFields.includes(field));
+    return isEditAllowed;
+}
+
+const validateResetPassword = (currentPassword = '', newPassword = '') => {
+    if (String(currentPassword) === String(newPassword)) {
+        throw new Error("Current and new password should not be the same");
+    } else if (!validator.isStrongPassword(newPassword)) {
+        throw new Error('Please enter a strong password');
+    }
+}
+
 module.exports =  {
     validateSignUp,
+    validateEditProfileData,
+    validateResetPassword,
 };
