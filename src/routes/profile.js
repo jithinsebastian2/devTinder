@@ -50,7 +50,7 @@ profileRouter.patch('/profile/edit', userAuth, async (req, res)=> {
 // Forgot password API
 profileRouter.patch('/profile/password', async (req, res)=> {
     try {
-        const { emailId = "", password, newPassword = '' } = req.body;
+        const { emailId = '', password = '', newPassword = '' } = req?.body;
         const user = await User.findOne({ emailId });
         if (!user) {
             throw new Error('Invalid emailId');

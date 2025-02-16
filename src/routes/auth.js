@@ -5,6 +5,12 @@ const authRouter = express.Router();
 const User = require('../models/user');
 const { validateSignUp } = require('../utils/validation');
 
+/* 
+Note:
+ we can change the name of this route from authRouter to router if required.
+ Because we are writing routing logic for auth router inside auth.js file only
+*/
+
 authRouter.post('/signup', async (req, res)=> {
     try {
         // Validation of Data

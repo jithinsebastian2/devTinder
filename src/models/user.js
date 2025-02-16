@@ -8,6 +8,7 @@ const userSchema = new Schema({
     firstName: {
         type: String,
         required: true,
+        index: true, // For creating an index or unique index
         minLength: 4,
         maxLength: 50,
     },
@@ -20,7 +21,7 @@ const userSchema = new Schema({
         required: true,
         unique: true,
         trim: true,
-        validate(value) {
+        validate(value) { // This kind of methods are called schema methods
             if (!validator.isEmail(value)) {
                 throw new Error('Invalid email'+ value);
             }
@@ -41,11 +42,15 @@ const userSchema = new Schema({
     },
     gender: {
         type: String,
-        validate(value) {
-            if (!['male', 'female', 'others'].includes(value)) {
-                throw new Error('Gender data is not valid');
-            }
-        }
+        enum: {
+            values: ['male', 'female', 'other'],
+            message: '{VALUE} is not a valid gender type',
+        },
+        // validate(value) {
+        //     if (!['male', 'female', 'others'].includes(value)) {
+        //         throw new Error('Gender data is not valid');
+        //     }
+        // }
     },
     photoUrl: {
         type: String,
@@ -67,6 +72,8 @@ const userSchema = new Schema({
 }, {
     timestamps: true,
 });
+
+userSchema.index({ firstName: 1 });
 
 userSchema.methods.getJWT = async function() {
     const user = this;
