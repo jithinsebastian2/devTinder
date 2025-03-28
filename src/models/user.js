@@ -8,7 +8,7 @@ const userSchema = new Schema({
     firstName: {
         type: String,
         required: true,
-        index: true, // For creating an index or unique index
+        index: true, // For creating an index or unique identifier, mongoDb will create it for us
         minLength: 4,
         maxLength: 50,
     },
@@ -73,7 +73,10 @@ const userSchema = new Schema({
     timestamps: true,
 });
 
-userSchema.index({ firstName: 1 });
+
+// We can create index for multiple fields
+// Compound indexes collect and sort data from two or more fields in each document in a collection.
+userSchema.index({ firstName: 1, lastName: 1 });
 
 userSchema.methods.getJWT = async function() {
     const user = this;

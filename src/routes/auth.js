@@ -16,7 +16,8 @@ authRouter.post('/signup', async (req, res)=> {
         // Validation of Data
         validateSignUp(req);
 
-        const { firstName, lastName, emailId, password, photoUrl } = req.body;
+        const {
+            firstName, lastName, emailId, password, photoUrl, gender, age, about, skills } = req.body;
 
         // Encrypt the password
         const passwordHash = await bcrypt.hash(password, 10);
@@ -28,6 +29,10 @@ authRouter.post('/signup', async (req, res)=> {
             emailId,
             photoUrl,
             password: passwordHash,
+            gender,
+            age,
+            about,
+            skills,
         });
         await user.save();
         res.send('User added successfully');

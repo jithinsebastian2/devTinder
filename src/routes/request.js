@@ -25,6 +25,7 @@ requestRouter.post('/request/send/:status/:toUserId',
         if (!toUser) {
             throw new Error('User not exists ');
         }
+        
         // If there is an existing connection request
         const existingConnectionRequest = await ConnectionRequest.findOne({
             $or: [
