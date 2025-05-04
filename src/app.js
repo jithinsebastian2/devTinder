@@ -1,8 +1,13 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const connectDB = require('./config/database');
 const app = express();
 
+app.use(cors({ // Options to whiteList the request origins domain names
+    origin: 'http://localhost:5173',
+    credentials: true, // To store the cookie and all (Need research on this)
+}));
 app.use(express.json()); // To parse the req data into JSON we are using express.json() parser/middleware
 app.use(cookieParser()); // For parsing the cookie
 

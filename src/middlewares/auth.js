@@ -7,7 +7,7 @@ const userAuth = async (req, res, next) => {
         // Read the token from the request
         const { token = null } = req.cookies || {};
         if (!token) {
-            throw new Error('Invalid token from middleware');
+            return res.status(401).send('Please login');
         }
 
         // validate the token

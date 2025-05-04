@@ -17,7 +17,16 @@ authRouter.post('/signup', async (req, res)=> {
         validateSignUp(req);
 
         const {
-            firstName, lastName, emailId, password, photoUrl, gender, age, about, skills } = req.body;
+            firstName,
+            lastName,
+            emailId,
+            password,
+            photoUrl= 'https://cdn.pixabay.com/photo/2015/03/04/22/35/avatar-659652_640.png',
+            // gender = '',
+            // age = '',
+            // about = '',
+            // skills = [],
+        } = req.body;
 
         // Encrypt the password
         const passwordHash = await bcrypt.hash(password, 10);
@@ -29,13 +38,22 @@ authRouter.post('/signup', async (req, res)=> {
             emailId,
             photoUrl,
             password: passwordHash,
-            gender,
-            age,
-            about,
-            skills,
+            // gender,
+            // age,
+            // about,
+            // skills,
         });
-        await user.save();
-        res.send('User added successfully');
+        const savedUser = await user.save();
+
+        const token = await savedUser.getJWT();
+        res.cookie('token', token, {
+            expires: new Date(Date.now() + 8 * 3600000)
+        })
+        res.status(200).json({
+            status: 'success',
+            message: 'User created successfully',
+            data: savedUser,
+        })
     } catch(err) {
         res.status(400).send('ERROR: ' + err.message);
     }
@@ -48,7 +66,7 @@ authRouter.post('/login', async (req, res) => {
        if (!user) {
         throw new Error('Invalid credentials');
        }
-       console.log('user', user);
+
        const isPasswordValid = await user.validatePassword(password);
        if (isPasswordValid) {
         // Create a JWT Token
@@ -57,9 +75,13 @@ authRouter.post('/login', async (req, res) => {
         // Add the Token to the cookie and send the response back to the user
         res.cookie('token', token,
             {  
-                expires: new Date(Date.now() + 900000), // Expiry date for the complete cookie
+                expires: new Date(Date.now() + 8 * 3600000) // Expiry date for the complete cookie
             });
-        res.status(200).send('User logged in successfully');
+        res.status(200).send({
+            status: 'success',
+            message: 'Logged in successfully',
+            data: user,
+        });
        } else {
         throw new Error('Invalid credentials');
        }
